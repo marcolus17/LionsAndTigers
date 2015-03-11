@@ -28,4 +28,9 @@ struct Tiger {
             self.chuff()
         }
     }
+    
+    // Example of a function that returns a value
+    func ageInTigerYearsFromAge(regularAge: Int) -> Int {
+        return regularAge * 3
+    }
 }
