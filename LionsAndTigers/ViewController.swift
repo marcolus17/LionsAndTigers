@@ -17,8 +17,12 @@ class ViewController: UIViewController {
     
     // Array used to hold the tiger instances
     var myTigers:[Tiger] = []
+    //Array used to hold the lion instances
+    var myLions:[Lion] = []
     // Keeps track of the current tiger loaded in the view
     var currentIndex = 0
+    // A tuple used to store the current animal
+    var currentAnimal = (species: "Tiger", index: 0)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +30,11 @@ class ViewController: UIViewController {
         
         // Initial load of tigers
         self.loadTigers()
+        // Initial load of lions
+        self.loadLions()
+        // Initial load to the view
+        self.updateAnimal()
+        self.updateView()
     }
     
     // Load the tigers into the array property
@@ -55,39 +64,60 @@ class ViewController: UIViewController {
         fourthTiger.image = UIImage(named:"SiberianTiger.jpg")
         
         myTigers += [myTiger, secondTiger, thirdTiger, fourthTiger]
-        self.changeTiger()
     }
     
-    // Grab a random tiger from the array
-    func changeTiger() {
-        if myTigers.count > 0 {
-            var randomIndex:Int
-            
-            // Make sure the new, random tiger is not the same as the current one
-            do {
-                randomIndex = Int(arc4random_uniform(UInt32(myTigers.count)))
-            } while currentIndex == randomIndex
-            
-            currentIndex = randomIndex
-            let tiger = myTigers[randomIndex]
-            self.updateView(tiger)
-        }
-        else {
-            self.loadTigers()
+    // Load the lions into the array property
+    func loadLions() {
+        var lion = Lion()
+        lion.age = 4
+        lion.isAlphaMale = false
+        lion.image = UIImage(named: "Lion.jpg")
+        lion.name = "Mufasa"
+        lion.subspecies = "West African"
+        
+        var lioness = Lion()
+        lioness.age = 3
+        lioness.isAlphaMale = false
+        lioness.image = UIImage(named: "Lioness.jpeg")
+        lioness.name = "Sarabi"
+        lioness.subspecies = "Barbary"
+        
+        myLions += [lion, lioness]
+    }
+    
+    // Switch between tigers and lions for the new image
+    func updateAnimal() {
+        switch currentAnimal {
+        case ("Tiger", _) :
+            let randomIndex = Int(arc4random_uniform(UInt32(myLions.count)))
+            currentAnimal = ("Lion", randomIndex)
+        default :
+            let randomIndex = Int(arc4random_uniform(UInt32(myTigers.count)))
+            currentAnimal = ("Tiger", randomIndex)
         }
     }
     
     // Update the view with a new tiger using animation
-    func updateView(tiger : Tiger) {
+    func updateView() {
         UIView.transitionWithView(
             self.view,
             duration: 1,
             options: UIViewAnimationOptions.TransitionCrossDissolve,
             animations: {
-                self.mainImageView.image = tiger.image
-                self.nameLabel.text = tiger.name
-                self.ageLabel.text = "\(tiger.age)"
-                self.breedLabel.text = tiger.breed
+                if self.currentAnimal.species == "Tiger" {
+                    let tiger = self.myTigers[self.currentAnimal.index]
+                    self.mainImageView.image = tiger.image
+                    self.breedLabel.text = tiger.breed
+                    self.ageLabel.text = "\(tiger.age)"
+                    self.nameLabel.text = tiger.name
+                }
+                else {
+                    let lion = self.myLions[self.currentAnimal.index]
+                    self.mainImageView.image = lion.image
+                    self.breedLabel.text = lion.subspecies
+                    self.ageLabel.text = "\(lion.age)"
+                    self.nameLabel.text = lion.name
+                }
             },
             completion: {
                 (finished: Bool) -> () in
@@ -101,7 +131,8 @@ class ViewController: UIViewController {
 
     // User pressed the next button to change the image on the screen
     @IBAction func nextBarButtonItemPressed(sender: UIBarButtonItem) {
-        self.changeTiger()
+        self.updateAnimal()
+        self.updateView()
     }
     
 }
