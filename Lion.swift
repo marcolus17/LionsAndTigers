@@ -15,4 +15,13 @@ class Lion {
     var image = UIImage(named: "")
     var name = ""
     var subspecies = ""
+    
+    func roar() {
+        println("Lion: Roar!")
+    }
+    
+    func changeToAlphaMale() {
+        self.isAlphaMale = true
+    }
 }
+

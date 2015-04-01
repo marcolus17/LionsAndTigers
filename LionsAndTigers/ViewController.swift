@@ -19,6 +19,8 @@ class ViewController: UIViewController {
     var myTigers:[Tiger] = []
     //Array used to hold the lion instances
     var myLions:[Lion] = []
+    // Array used to hold the lion cub instances
+    var myLionCubs:[LionCub] = []
     // Keeps track of the current tiger loaded in the view
     var currentIndex = 0
     // A tuple used to store the current animal
@@ -82,6 +84,21 @@ class ViewController: UIViewController {
         lioness.name = "Sarabi"
         lioness.subspecies = "Barbary"
         
+        var lionCub = LionCub()
+        lionCub.age = 1
+        lionCub.name = "Simba"
+        lionCub.image = UIImage(named: "LionCub1.jpg")
+        lionCub.subspecies = "Masai"
+        lionCub.isAlphaMale = true
+        
+        var femaleLionCub = LionCub()
+        femaleLionCub.age = 1
+        femaleLionCub.name = "Nala"
+        femaleLionCub.image = UIImage(named: "LionCub2.jpeg")
+        femaleLionCub.subspecies = "Transvaal"
+        femaleLionCub.isAlphaMale = false
+        
+        myLionCubs += [lionCub, femaleLionCub]
         myLions += [lion, lioness]
     }
     
@@ -91,6 +108,9 @@ class ViewController: UIViewController {
         case ("Tiger", _) :
             let randomIndex = Int(arc4random_uniform(UInt32(myLions.count)))
             currentAnimal = ("Lion", randomIndex)
+        case ("Lion", _) :
+            let randomIndex = Int(arc4random_uniform(UInt32(myLionCubs.count)))
+            currentAnimal = ("LionCub", randomIndex)
         default :
             let randomIndex = Int(arc4random_uniform(UInt32(myTigers.count)))
             currentAnimal = ("Tiger", randomIndex)
@@ -110,6 +130,13 @@ class ViewController: UIViewController {
                     self.breedLabel.text = tiger.breed
                     self.ageLabel.text = "\(tiger.age)"
                     self.nameLabel.text = tiger.name
+                }
+                else if self.currentAnimal.species == "LionCub" {
+                    let lionCub = self.myLionCubs[self.currentAnimal.index]
+                    self.mainImageView.image = lionCub.image
+                    self.breedLabel.text = lionCub.subspecies
+                    self.ageLabel.text = "\(lionCub.age)"
+                    self.nameLabel.text = lionCub.name
                 }
                 else {
                     let lion = self.myLions[self.currentAnimal.index]
